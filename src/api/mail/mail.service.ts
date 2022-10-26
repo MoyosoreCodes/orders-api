@@ -2,7 +2,6 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { Order } from "../order/order.model";
 import { User } from "../auth/auth.model";
-import { join } from "path";
 
 export enum emailSubjects {
     ORDER_CREATED = 'Order Created',
