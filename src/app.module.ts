@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config'
 import { AppController } from './app.controller';
 import { ApiModule } from './api';
 import { AppService } from './app.service';
-import { MailModule } from './api/mail/mail.module';
 
 
 @Module({
