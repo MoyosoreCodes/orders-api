@@ -1,0 +1,66 @@
+<style>
+    #products {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #products td,
+    #products thead {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #products tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #products tr:hover {
+        background-color: #ddd;
+    }
+
+    #products thead {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
+
+<body>
+    <h1>Hello <%=user.username%></h1>
+    <h4>You created a new order</h4>
+
+    <table id="products" 
+        style="
+            font-family: Arial, Helvetica, sans-serif; 
+            border-collapse: collapse; 
+            width: auto;
+            text-transform: capitalize;"
+    >
+        <thead style="
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;">
+            <td>Product</td>
+            <td>Quantity</td>
+        </thead>
+        <tbody>
+            <%for (product of order.products) { %>
+                <tr>
+                    <td>
+                        <%=product.name%>
+                    </td>
+                    <td>
+                        <%=product.quantity%>
+                    </td>
+                </tr>
+                <%}%>
+        </tbody>
+    </table>
+</body>
