@@ -15,36 +15,44 @@ export class OrderController {
         @Inject(forwardRef(() => OrderService))
         private readonly _orderService: OrderService,
         private readonly _productService: ProductService,
-        private readonly authService: AuthService,
         private _mailService: MailService
     ) { }
 
     @UseGuards(AuthGuard('jwt'))
     @Post()
     async createOrder(@Req() req) {
-        const { products } = req.body;
-        const user = req.user;
-
-        const newProducts = await this._productService.create(products);
-        const productIds = Array.isArray(newProducts) ? [...newProducts.map((product: ProductDocument) => product._id)] : [newProducts._id]
-        
-        let newOrder: Order = {
-            products: productIds,
-            created_by: user._id
+        try {
+            console.log("creating a new order")
+            const { products } = req.body;
+            const user = req.user;
+    
+            const newProducts = await this._productService.create(products);
+            const productIds = Array.isArray(newProducts) ? [...newProducts.map((product: ProductDocument) => product._id)] : [newProducts._id]
+            
+            let newOrder: Order = {
+                products: productIds,
+                created_by: user._id
+            }
+            const createdOrder = await this._orderService.create(newOrder);
+    
+            const order = await this._orderService.getOrderDetails(createdOrder._id)
+            
+            const response = await this._mailService.send(emailSubjects.ORDER_CREATED, { user: order.created_by , order })
+            if(!response || response.response.split('')[0] != 250 ) {
+                await this._orderService.deleteOrder(order._id)
+            }
+            return {
+                statusCode: HttpStatus.CREATED,
+                message: "Order created check your email for details",
+                data: order
+            };
+        } catch (error) {
+            console.log(error.message)
+            return {
+                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                message: error.message
+            }
         }
-        const createdOrder = await this._orderService.create(newOrder);
-
-        const order = await this._orderService.getOrderDetails(createdOrder._id)
-        
-        const response = await this._mailService.send(emailSubjects.ORDER_CREATED, { user: order.created_by , order })
-        if(!response || response.response.split('')[0] != 250 ) {
-            await this._orderService.deleteOrder(order._id)
-        }
-        return {
-            statusCode: HttpStatus.CREATED,
-            message: "Order created check your email for details",
-            data: order
-        };
     }
 
     @Get()
