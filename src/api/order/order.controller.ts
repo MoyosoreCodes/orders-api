@@ -22,7 +22,6 @@ export class OrderController {
     @Post()
     async createOrder(@Req() req) {
         try {
-            console.log("creating a new order")
             const { products } = req.body;
             const user = req.user;
     
@@ -57,6 +56,11 @@ export class OrderController {
 
     @Get()
     async getAllOrders() {
-        return this._orderService.find();
+        const orders  = await this._orderService.find();
+        return {
+            statusCode: orders.length > 0 ? 200 : 404,
+            message: orders.length > 0 ? "successfully retrieved orders" : "no orders to show",
+            data: orders
+        }
     }
 }
