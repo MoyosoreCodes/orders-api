@@ -24,7 +24,7 @@ export class OrderService {
     async getOrderDetails(orderId: string): Promise<OrderDocument> {
         return this._orderModel.findOne({_id: orderId})
             .populate('products', 'name quantity')
-            .populate('created_by', 'email username password')
+            .populate('created_by', 'email username password phoneNumber')
             .select('-createdAt -updatedAt -__v')
     }
 }

@@ -6,6 +6,7 @@ import { orderSchema } from "./order.model";
 import { ProductModule } from "../product/product.module";
 import { AuthModule } from "../auth/auth.module";
 import { MailModule } from "../mail/mail.module";
+import { SMSModule } from "../sms/sms.module";
 
 
 @Module({
@@ -15,7 +16,8 @@ import { MailModule } from "../mail/mail.module";
         ]),
         ProductModule, 
         AuthModule,
-        MailModule
+        MailModule,
+        SMSModule
     ],
     controllers: [OrderController],
     providers: [OrderService],

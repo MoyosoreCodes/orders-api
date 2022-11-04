@@ -12,6 +12,9 @@ export class User {
     @Prop({ required: true, lowercase: true, unique: true })
     username: string
 
+    @Prop({trim: true})
+    phoneNumber: string
+
     @Prop({ required: true })
     password: string
 

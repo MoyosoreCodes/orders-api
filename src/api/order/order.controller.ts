@@ -2,11 +2,10 @@ import { Get, Post, Controller, Inject, forwardRef, Req, UseGuards, HttpStatus }
 import { OrderService } from "./order.service";
 import { ProductService } from "../product/product.service";
 import { Order } from "./order.model";
-import { AuthService } from "../auth/auth.service";
 import { emailSubjects, MailService } from "../mail/mail.service";
 import { ProductDocument } from "../product/product.model";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AuthGuard } from '@nestjs/passport';
+import { SMSService } from "../sms/sms.service";
 
 
 @Controller({ path: '/orders' })
@@ -15,7 +14,8 @@ export class OrderController {
         @Inject(forwardRef(() => OrderService))
         private readonly _orderService: OrderService,
         private readonly _productService: ProductService,
-        private _mailService: MailService
+        private _mailService: MailService,
+        private _smsService: SMSService
     ) { }
 
     @UseGuards(AuthGuard('jwt'))
@@ -40,6 +40,8 @@ export class OrderController {
             if(!response || response.response.split('')[0] != 250 ) {
                 await this._orderService.deleteOrder(order._id)
             }
+
+            const result = await this._smsService.sendOrderSMS(order.created_by.phoneNumber, order)
             return {
                 statusCode: HttpStatus.CREATED,
                 message: "Order created check your email for details",
