@@ -41,7 +41,7 @@ export class OrderController {
                 await this._orderService.deleteOrder(order._id)
             }
 
-            const result = await this._smsService.sendOrderSMS(order.created_by.phoneNumber, order)
+            // const result = await this._smsService.sendOrderSMS(order.created_by.phoneNumber, order)
             return {
                 statusCode: HttpStatus.CREATED,
                 message: "Order created check your email for details",
